@@ -1,35 +1,73 @@
+var data = [];
+var pagesToSearch = 0;
+var resultsPerPages = 20;
+
+
+
 angular.module('todoApp', [])
 
-  .controller('TodoListController', function($scope, $http) {
-    // var todoList = this;
-    // todoList.test = "hellooooo";
+  .controller('mainController', function($scope, $http) {
+    //***************************************************************//
+    //Collecting data
+    //***************************************************************//
 
-    $http.get('http://chroniclingamerica.loc.gov/search/titles/results/?terms=thomas&format=json&page=1')
-       .success(function(response) {
-          $scope.clients = response.items;
-          console.log(response);
-       }).error(function(response) {
-          console.log(response);
-       });
+    //Helper Method
+    $scope.makeCalls = function(name) {
+      $http.get('http://chroniclingamerica.loc.gov/search/titles/results/?andtext=' + name + '&format=json')
+         .success(function(response) {
+            pagesToSearch = Math.ceil(response.totalItems / resultsPerPages);
+            console.log("Our total number of pages is: " + pagesToSearch);
+            console.log("all good to go");
 
-    // getKeyManagementResources
-    //   .getKeys()
-    //   .success(function(response) {
-    //     $scope.clients = response.items;
-    //     console.log($scope.clients.length);
-    //
-    //   }).error(function(response) {
-    //     errorFunction(response, $scope);
-    //   });
-  })
+            console.log("We are searching through " + pagesToSearch + " pages!");
+            for (var i = 1; i <= Math.min(10,pagesToSearch); i++){
+              $scope.sendHTTPSCall(name, i);
+            }
+         }).error(function(response) {
+            console.log("damaging error!");
+         });
+    };
+    //Helper Method
+    $scope.sendHTTPSCall = function(name, page) {
+      $http.get('http://chroniclingamerica.loc.gov/search/titles/results/?andtext=' + name + '&format=json&page=' + page)
+         .success(function(response) {
+            $scope.aggregate(response, false);
+            pagesToSearch--;
+         }).error(function(response) {
+            console.log("Error at sendHTTPSCall()");
+         });
+    };
+    //Helper Method
+    $scope.aggregate = function(response, restart){
+      if (restart === true){
+        console.log("restarting");
+        data = [];
+        pagesToSearch = 0;
+      }
+      for (var i = 0; i < resultsPerPages; i++) {
+        data.push(response.items[i]);
+      }
+      //***************************************************************//
+      //Processing data BEGIN
+      //***************************************************************//
 
-  // .factory('getKeyManagementResources', ['$http', function($http) {
-  //   return {
-  //     getKeys: function() {
-  //       return $http({
-  //         method: 'GET',
-  //         url: 'http://chroniclingamerica.loc.gov/search/titles/results/?terms=thomas&format=json&page=1'
-  //       });
-  //     },
-  //   };
-  // }]);
+      console.log(data);
+
+
+
+
+
+      //***************************************************************//
+      //Processing data END
+      //***************************************************************//
+
+    };
+
+
+
+    $scope.makeCalls("america");
+
+
+
+
+  });
