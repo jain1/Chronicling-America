@@ -1,22 +1,21 @@
 {
-  "name": "OpenSearchlight",
-  "version": "0.0.0-ignored",
-  "engines": {
-    "node": ">= 0.8.0"
+  "name": "newspaper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "angular": "^1.4.8",
+    "angular-animate": "^1.4.8",
+    "angular-aria": "^1.4.8",
+    "angular-material": "^0.11.4",
+    "angular-ui-router": "^0.2.15",
+    "connect": "^3.4.0",
+    "serve-static": "^1.10.0"
   },
   "scripts": {
-    "test": "grunt qunit"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "devDependencies": {
-    "docco": "~0.6.2",
-    "temporary": "~0.0.4",
-    "grunt": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-exec": "~0.4.0",
-    "grunt-contrib-qunit": "~0.2.1",
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt-contrib-watch": "~0.3.1"
-  }
+  "author": "",
+  "license": "ISC"
 }
