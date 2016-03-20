@@ -8,7 +8,7 @@ angular.module('todoApp', [])
 
   .controller('mainController', function($scope, $http) {
     //***************************************************************//
-    //Collecting data
+    //Collecting data BEGIN
     //***************************************************************//
 
     //Helper Method
@@ -47,12 +47,6 @@ angular.module('todoApp', [])
       for (var i = 0; i < resultsPerPages; i++) {
         var object = response.items[i];
 
-        //used to check if papers had multiple locations
-        // if (object.city.length > 1 || object.state.length > 1){
-        //   console.log("city or state has more than one elements!");
-        //   console.log(object.city + "\n" + object.state);
-        // }
-
         //error handling
         if (object === undefined || object.city === undefined || object.state === undefined || object.date === undefined) continue;
 
@@ -60,36 +54,39 @@ angular.module('todoApp', [])
         //locations
         for (var j = 0; j < object.city.length; j++) {
           data.push(new paper(object.city[j], object.state[j], object.date.substring(0,4)));
-
         }
       }
-      //***************************************************************//
-      //Processing data BEGIN
-      //***************************************************************//
-
-      console.log(data.length);
-      //console.log(data);
-
-
-
-
-
-
-      //***************************************************************//
-      //Processing data END
-      //***************************************************************//
-
     };
 
-
-
-    $scope.makeCalls("world+war");
+    //***************************************************************//
+    //Collecting data END
+    //***************************************************************//
 
     function paper(city, state, year) {
       this.city = city;
       this.state = state;
       this.year = year;
     }
+
+    $scope.makeCalls("titanic");
+    setTimeout(function () {
+        console.log("MUHAHAHAHAHAH" + data.length);
+        //***************************************************************//
+        //Processing data BEGIN
+        //***************************************************************//
+
+
+
+
+
+
+
+        //***************************************************************//
+        //Processing data END
+        //***************************************************************//
+    }, 5000);
+
+    
 
 
 
