@@ -42,9 +42,9 @@
        Search Phrase:
        <input type="text" name="inputData" ng-model="user" placeholder="Enter String">
        <button ng-click="inputData(user)" ng-init="count=0">
-        click
+        Search!
       </button>
-      <div ng-show="showSlider" layout="row">
+      <div ng-show="sliderVisibility" layout="row">
         <div layout="row">
         <md-slider-container>
           <md-slider style="width:600px" flex="" min="1836" max="1922" ng-model="color.black" aria-label="black" id="black-slider" ng-change="updateYear(color.black)">

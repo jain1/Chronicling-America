@@ -185,7 +185,20 @@ angular.module('todoApp', ['ngMaterial'])
       addData(value);
     };
 
+    // $scope.slider = function(){
+    //   setTimeout(function(){
+    //     console.log($scope.sliderVisibility);
+    //     $scope.sliderVisibility = true;
+    //     console.log($scope.sliderVisibility);
+    //
+    //   }, 7000);
+    // };
+
     $scope.inputData = function(user){
+      $scope.sliderVisibility = true;
+
+
+      //$scope.slider();
       user = user.replace(" ", "+");
       $scope.makeCalls(user);
       setTimeout(function () {
@@ -211,8 +224,6 @@ angular.module('todoApp', ['ngMaterial'])
       }, 5000);
       setTimeout(function(){
         loadD3();
-        console.log($scope.showSlider);
-        $scope.showSlider = true;
 
       }, 7000);
       function loadD3() {
@@ -259,6 +270,11 @@ angular.module('todoApp', ['ngMaterial'])
           //***************************************************************//
           //D3 END
           //***************************************************************//
+          // if ($scope.sliderVisibility !== true){
+          //   $scope.sliderVisibility = true;
+          //   console.log($scope.sliderVisibility);
+          // }
+
       }
 
     };

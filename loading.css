@@ -96,6 +96,6 @@ body > :not(.pace),body:before,body:after {
   transition:opacity .4s ease-in-out
 }
 
-/*body:not(.pace-done) > :not(.pace),body:not(.pace-done):before,body:not(.pace-done):after {
+body:not(.pace-done) > :not(.pace),body:not(.pace-done):before,body:not(.pace-done):after {
   opacity:0
-}*/
+}
