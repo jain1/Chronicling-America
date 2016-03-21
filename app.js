@@ -6,6 +6,13 @@ var pagesToSearch = 0;
 var resultsPerPages = 50;
 var maxIndex = 0;
 
+var project;
+var path;
+var svg;
+var width = 950;
+var height = 500;
+
+
 var states = [
         ['Arizona', 'AZ'],
         ['Alabama', 'AL'],
@@ -239,6 +246,7 @@ angular.module('todoApp', [])
       this.year = year;
     }
     $scope.inputData = function(user){
+
       user = user.replace(" ", "+");
       $scope.makeCalls(user);
       setTimeout(function () {
@@ -284,17 +292,15 @@ angular.module('todoApp', [])
           //***************************************************************//
           //D3 BEGIN
           //***************************************************************//
-          var width = 960,
-              height = 500;
 
-          var projection = d3.geo.albersUsa()
+          projection = d3.geo.albersUsa()
               .scale(1000)
               .translate([width / 2, height / 2]);
 
-          var path = d3.geo.path()
+          path = d3.geo.path()
               .projection(projection);
 
-          var svg = d3.select("body").append("svg")
+          svg = d3.select("body").append("svg")
               .attr("width", width)
               .attr("height", height);
           d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/us.json", function(error, us) {
