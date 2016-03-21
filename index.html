@@ -33,6 +33,13 @@
     <h2>Chronicling-America Visualization</h2>
     <div ng-controller="mainController as controller">
       {{clients}}
+      <label>
+       String:
+       <input type="text" name="inputData" ng-model="user" placeholder="Enter String">
+       <button ng-click="inputData(user)" ng-init="count=0">
+        click
+      </button>
+    </label>
     </div>
     <script src="angular.min.js"></script>
     <script src="app.js"></script>

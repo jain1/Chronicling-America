@@ -238,127 +238,249 @@ angular.module('todoApp', [])
       this.state = state;
       this.year = year;
     }
+    $scope.inputData = function(user){
+      user = user.replace(" ", "+");
+      $scope.makeCalls(user);
+      setTimeout(function () {
+        maxIndex = data.length;
+        console.log("The max Index is: " + maxIndex);
 
-    $scope.makeCalls("slavery");
-    setTimeout(function () {
-      maxIndex = data.length;
-      console.log("The max Index is: " + maxIndex);
+        //TODO
+        //sort the array by the year
 
-      //TODO
-      //sort the array by the year
+        // $scope.elements = data;
+        // $scope.newElements = newData;
+        var newData = [];
 
-      // $scope.elements = data;
-      // $scope.newElements = newData;
-      var newData = [];
-
-      for (var i = 0; i < maxIndex; i++){
-        var address = data[i].city + "," + data[i].state;
-        if (newData.length === 0 || newData.indexOf(address) < 0){
-          newData.push(address);
-          newDataCount.push(1);
-        }
-        else {
-          newDataCount[newData.indexOf(address)]++;
-        }
-      }
-      console.log(newDataCount.length);
-
-      $scope.getGeographicalAddress(newData);
-      // for (var k = 0; k < newData.length; k++){
-      //   //console.log(newData[k]);
-      //   $scope.getGeographicalAddress(newData[k]);
-      // }
-
-
-    }, 5000);
-
-    setTimeout(function () {
-        console.log(latitude.length);
-        console.log(longitude.length);
-        console.log("MUHAHAHAHAHAH");
-        // for (var i = 0; i < 50; i++) {
-        //   console.log(data[i].longitude);
-        //   console.log(data[i].latitude);
-        // }
-        //***************************************************************//
-        //D3 BEGIN
-        //***************************************************************//
-        var width = 960,
-            height = 500;
-
-        var projection = d3.geo.albersUsa()
-            .scale(1000)
-            .translate([width / 2, height / 2]);
-
-        var path = d3.geo.path()
-            .projection(projection);
-
-        var svg = d3.select("body").append("svg")
-            .attr("width", width)
-            .attr("height", height);
-        d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/us.json", function(error, us) {
-          if (error) throw error;
-
-          svg.insert("path", ".graticule")
-              .datum(topojson.feature(us, us.objects.land))
-              .attr("class", "land")
-              .attr("d", path);
-
-          svg.insert("path", ".graticule")
-              .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b && !(a.id / 1000 ^ b.id / 1000); }))
-              .attr("class", "county-boundary")
-              .attr("d", path);
-
-          svg.insert("path", ".graticule")
-              .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-              .attr("class", "state-boundary")
-              .attr("d", path);
-
-          //TODO
-          //find the max value of newDataCount
-
-          for (var i = 0; i < newDataCount.length; i++){
-            if (latitude[i] != -500){
-              var l = Number(latitude[i]);
-              var ll = Number(longitude[i]);
-
-              //console.log(l + ", " + ll);
-
-              var loc = projection([l, ll]);
-              svg.append("circle")
-                  .attr("cx", loc[0])
-                  .attr("cy", loc[1])
-                  .attr("r", newDataCount[i]/8.0)
-                  .style("fill", "red");
-            }
+        for (var i = 0; i < maxIndex; i++){
+          var address = data[i].city + "," + data[i].state;
+          if (newData.length === 0 || newData.indexOf(address) < 0){
+            newData.push(address);
+            newDataCount.push(1);
           }
+          else {
+            newDataCount[newData.indexOf(address)]++;
+          }
+        }
+        console.log(newDataCount.length);
 
-          // var l = Number(latitude[0]);
-          // var ll = Number(longitude[0]);
-          //
-          // console.log(l + ", " + ll);
-          //
-          // var loc = projection([l, ll]);
-          // svg.append("circle")
-          //     .attr("cx", loc[0])
-          //     .attr("cy", loc[1])
-          //     .attr("r", newDataCount[0]/3.0)
-          //     .style("fill", "red");
-
-
-        });
-
-        d3.select(self.frameElement).style("height", height + "px");
+        $scope.getGeographicalAddress(newData);
+        // for (var k = 0; k < newData.length; k++){
+        //   //console.log(newData[k]);
+        //   $scope.getGeographicalAddress(newData[k]);
+        // }
 
 
+      }, 5000);
+
+      setTimeout(function () {
+          console.log(latitude.length);
+          console.log(longitude.length);
+          console.log("MUHAHAHAHAHAH");
+          // for (var i = 0; i < 50; i++) {
+          //   console.log(data[i].longitude);
+          //   console.log(data[i].latitude);
+          // }
+          //***************************************************************//
+          //D3 BEGIN
+          //***************************************************************//
+          var width = 960,
+              height = 500;
+
+          var projection = d3.geo.albersUsa()
+              .scale(1000)
+              .translate([width / 2, height / 2]);
+
+          var path = d3.geo.path()
+              .projection(projection);
+
+          var svg = d3.select("body").append("svg")
+              .attr("width", width)
+              .attr("height", height);
+          d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/us.json", function(error, us) {
+            if (error) throw error;
+
+            svg.insert("path", ".graticule")
+                .datum(topojson.feature(us, us.objects.land))
+                .attr("class", "land")
+                .attr("d", path);
+
+            svg.insert("path", ".graticule")
+                .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b && !(a.id / 1000 ^ b.id / 1000); }))
+                .attr("class", "county-boundary")
+                .attr("d", path);
+
+            svg.insert("path", ".graticule")
+                .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+                .attr("class", "state-boundary")
+                .attr("d", path);
+
+            //TODO
+            //find the max value of newDataCount
+
+            for (var i = 0; i < newDataCount.length; i++){
+              if (latitude[i] != -500){
+                var l = Number(latitude[i]);
+                var ll = Number(longitude[i]);
+
+                //console.log(l + ", " + ll);
+
+                var loc = projection([l, ll]);
+                svg.append("circle")
+                    .attr("cx", loc[0])
+                    .attr("cy", loc[1])
+                    .attr("r", newDataCount[i]/8.0)
+                    .style("fill", "red");
+              }
+            }
+
+            // var l = Number(latitude[0]);
+            // var ll = Number(longitude[0]);
+            //
+            // console.log(l + ", " + ll);
+            //
+            // var loc = projection([l, ll]);
+            // svg.append("circle")
+            //     .attr("cx", loc[0])
+            //     .attr("cy", loc[1])
+            //     .attr("r", newDataCount[0]/3.0)
+            //     .style("fill", "red");
+
+
+          });
+
+          d3.select(self.frameElement).style("height", height + "px");
 
 
 
 
-        //***************************************************************//
-        //D3 END
-        //***************************************************************//
-    }, 7000);
+
+
+          //***************************************************************//
+          //D3 END
+          //***************************************************************//
+      }, 7000);
+    }
+    // $scope.makeCalls("slavery");
+    // setTimeout(function () {
+    //   maxIndex = data.length;
+    //   console.log("The max Index is: " + maxIndex);
+    //
+    //   //TODO
+    //   //sort the array by the year
+    //
+    //   // $scope.elements = data;
+    //   // $scope.newElements = newData;
+    //   var newData = [];
+    //
+    //   for (var i = 0; i < maxIndex; i++){
+    //     var address = data[i].city + "," + data[i].state;
+    //     if (newData.length === 0 || newData.indexOf(address) < 0){
+    //       newData.push(address);
+    //       newDataCount.push(1);
+    //     }
+    //     else {
+    //       newDataCount[newData.indexOf(address)]++;
+    //     }
+    //   }
+    //   console.log(newDataCount.length);
+    //
+    //   $scope.getGeographicalAddress(newData);
+    //   // for (var k = 0; k < newData.length; k++){
+    //   //   //console.log(newData[k]);
+    //   //   $scope.getGeographicalAddress(newData[k]);
+    //   // }
+    //
+    //
+    // }, 5000);
+    //
+    // setTimeout(function () {
+    //     console.log(latitude.length);
+    //     console.log(longitude.length);
+    //     console.log("MUHAHAHAHAHAH");
+    //     // for (var i = 0; i < 50; i++) {
+    //     //   console.log(data[i].longitude);
+    //     //   console.log(data[i].latitude);
+    //     // }
+    //     //***************************************************************//
+    //     //D3 BEGIN
+    //     //***************************************************************//
+    //     var width = 960,
+    //         height = 500;
+    //
+    //     var projection = d3.geo.albersUsa()
+    //         .scale(1000)
+    //         .translate([width / 2, height / 2]);
+    //
+    //     var path = d3.geo.path()
+    //         .projection(projection);
+    //
+    //     var svg = d3.select("body").append("svg")
+    //         .attr("width", width)
+    //         .attr("height", height);
+    //     d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/us.json", function(error, us) {
+    //       if (error) throw error;
+    //
+    //       svg.insert("path", ".graticule")
+    //           .datum(topojson.feature(us, us.objects.land))
+    //           .attr("class", "land")
+    //           .attr("d", path);
+    //
+    //       svg.insert("path", ".graticule")
+    //           .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b && !(a.id / 1000 ^ b.id / 1000); }))
+    //           .attr("class", "county-boundary")
+    //           .attr("d", path);
+    //
+    //       svg.insert("path", ".graticule")
+    //           .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+    //           .attr("class", "state-boundary")
+    //           .attr("d", path);
+    //
+    //       //TODO
+    //       //find the max value of newDataCount
+    //
+    //       for (var i = 0; i < newDataCount.length; i++){
+    //         if (latitude[i] != -500){
+    //           var l = Number(latitude[i]);
+    //           var ll = Number(longitude[i]);
+    //
+    //           //console.log(l + ", " + ll);
+    //
+    //           var loc = projection([l, ll]);
+    //           svg.append("circle")
+    //               .attr("cx", loc[0])
+    //               .attr("cy", loc[1])
+    //               .attr("r", newDataCount[i]/8.0)
+    //               .style("fill", "red");
+    //         }
+    //       }
+    //
+    //       // var l = Number(latitude[0]);
+    //       // var ll = Number(longitude[0]);
+    //       //
+    //       // console.log(l + ", " + ll);
+    //       //
+    //       // var loc = projection([l, ll]);
+    //       // svg.append("circle")
+    //       //     .attr("cx", loc[0])
+    //       //     .attr("cy", loc[1])
+    //       //     .attr("r", newDataCount[0]/3.0)
+    //       //     .style("fill", "red");
+    //
+    //
+    //     });
+    //
+    //     d3.select(self.frameElement).style("height", height + "px");
+    //
+    //
+    //
+    //
+    //
+    //
+    //     //***************************************************************//
+    //     //D3 END
+    //     //***************************************************************//
+    // }, 7000);
 
     // setTimeout(function(){
     //   console.log(latitude.length);
