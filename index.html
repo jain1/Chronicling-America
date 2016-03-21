@@ -22,7 +22,6 @@
   <head>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script src="pace.min.js"></script>
       <link href="loading.css" rel="stylesheet" />
 
@@ -34,10 +33,11 @@
   <body>
     <h2>Chronicling-America Visualization</h2>
     <div ng-controller="mainController as controller">
+      <i> If the project does not load, you can access it here: https://github.com/jain1/Chronicling-America</i><br/><br/>
       <strong>Please reload page before new search.</strong><br/><br/>
       {{clients}}
       <label>
-       String:
+       Search Phrase:
        <input type="text" name="inputData" ng-model="user" placeholder="Enter String">
        <button ng-click="inputData(user)" ng-init="count=0">
         click

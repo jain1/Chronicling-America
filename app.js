@@ -119,16 +119,6 @@ angular.module('todoApp', [])
         //error handling
         if (object === undefined || object.city === undefined || object.state === undefined || object.date === undefined) continue;
 
-        // //converting state names into Abbreviations
-        // // console.log("trying to change state form. Current form:");
-        // var state = object.state[0];
-        // // console.log(state);
-        // for(var k = 0; k < states.length; k++){
-        //     if(states[k][0] == state){
-        //         state = states[k][1];
-        //     }
-        // }
-
         //we have to handle situations where that paper was published in multiple
         //locations
         for (var j = 0; j < object.city.length; j++) {
@@ -143,31 +133,6 @@ angular.module('todoApp', [])
 
           var newObject = new paper(city, state, object.date.substring(0,4));
           data.push(newObject);
-
-          // var address = city + ", " + state;
-          // console.log(address);
-          // //finding coordinates
-          //
-          // var latitude;
-          // var longitude;
-          // geocoder.geocode( { 'address': address}, function(results, status) {
-          //
-          //   if (status == google.maps.GeocoderStatus.OK) {
-          //     latitude = results[0].geometry.location.lat();
-          //     longitude = results[0].geometry.location.lng();
-          //     //console.log(latitude);
-          //     //console.log(longitude);
-          //
-          //     var newObject = new paper(latitude, longitude, object.date.substring(0,4));
-          //     data.push(newObject);
-          //   }
-          // });
-
-
-          // var newObject = new paper(latitude, longitude, object.date.substring(0,4));
-          // //console.log("Our " + i + " th element: " + newObject.longitude + newObject.latitude);
-          //
-          // data.push(newObject);
         }
         //console.log(data.length);
         //printing out individual elements
@@ -176,11 +141,6 @@ angular.module('todoApp', [])
         // }
       }
     };
-
-    // mainFactory.get().then(function (msg) {
-    //   $scope.msg = msg;
-    //   console.log($scope.msg);
-    // });
 
     $scope.getGeographicalAddress = function(newData) {
       $http.get('test.json')
@@ -211,18 +171,6 @@ angular.module('todoApp', [])
                 latitude.push(-500);
               }
             }
-
-
-
-            // for (var i = 0; i < response.length; i++){
-            //   if (response[i].FIELD1 == tokens[1] && response[i].FIELD2 == tokens[0]){
-            //     longitude.push(response[i].FIELD4);
-            //     latitude.push(response[i].FIELD3);
-            //     //console.log(response[i]);
-            //     break;
-            //   }
-            //
-            // }
          }).error(function(response) {
             console.log("Error at loading json");
          });
@@ -234,17 +182,15 @@ angular.module('todoApp', [])
     //Collecting data END
     //***************************************************************//
 
-    // function paper(latitude, longitude, year) {
-    //   this.latitude = latitude;
-    //   this.longitude = longitude;
-    //   this.year = year;
-    // }
-
     function paper(city, state, year) {
       this.city = city;
       this.state = state;
       this.year = year;
     }
+    $scope.init = function() {
+
+    };
+
     $scope.inputData = function(user){
 
       user = user.replace(" ", "+");
@@ -280,11 +226,14 @@ angular.module('todoApp', [])
 
 
       }, 5000);
-
-      setTimeout(function () {
-          console.log(latitude.length);
-          console.log(longitude.length);
-          console.log("MUHAHAHAHAHAH");
+      setTimeout(function(){
+        loadD3();
+        //addData();
+      }, 7000);
+      function loadD3() {
+          // console.log(latitude.length);
+          // console.log(longitude.length);
+          // console.log("MUHAHAHAHAHAH");
           // for (var i = 0; i < 50; i++) {
           //   console.log(data[i].longitude);
           //   console.log(data[i].latitude);
@@ -292,6 +241,8 @@ angular.module('todoApp', [])
           //***************************************************************//
           //D3 BEGIN
           //***************************************************************//
+
+          d3.selectAll("svg > *").remove();
 
           projection = d3.geo.albersUsa()
               .scale(1000)
@@ -323,178 +274,64 @@ angular.module('todoApp', [])
 
             //TODO
             //find the max value of newDataCount
-
-            for (var i = 0; i < newDataCount.length; i++){
-              if (latitude[i] != -500){
-                var l = Number(latitude[i]);
-                var ll = Number(longitude[i]);
-
-                //console.log(l + ", " + ll);
-
-                var loc = projection([l, ll]);
-                svg.append("circle")
-                    .attr("cx", loc[0])
-                    .attr("cy", loc[1])
-                    .attr("r", newDataCount[i]/8.0)
-                    .style("fill", "red");
-              }
-            }
-
-            // var l = Number(latitude[0]);
-            // var ll = Number(longitude[0]);
-            //
-            // console.log(l + ", " + ll);
-            //
-            // var loc = projection([l, ll]);
-            // svg.append("circle")
-            //     .attr("cx", loc[0])
-            //     .attr("cy", loc[1])
-            //     .attr("r", newDataCount[0]/3.0)
-            //     .style("fill", "red");
+            addData();
 
 
           });
-
-          d3.select(self.frameElement).style("height", height + "px");
-
-
-
-
-
+          //d3.select(self.frameElement).style("height", height);
+          //addData();
 
           //***************************************************************//
           //D3 END
           //***************************************************************//
-      }, 7000);
+      }
+
+      // setTimeout(function() {
+      //   addData(1850);
+      //   //addData(1850);
+      //   console.log("completed 20 second delay");
+      //   console.log(20 < undefined);
+      // }, 20000);
+    };
+
+    function addData(year){
+      //removes all previous elements
+      svg.selectAll("circle").remove();
+      if (year !== undefined){
+        for (var i = 0; i < newDataCount.length; i++){
+          if (latitude[i] != -500 && data[i].year < year){
+            var l = Number(latitude[i]);
+            var ll = Number(longitude[i]);
+
+            //console.log(l + ", " + ll);
+            //TODO
+            //find max of data before you are making the circles
+            var loc = projection([l, ll]);
+            svg.append("circle")
+                .attr("cx", loc[0])
+                .attr("cy", loc[1])
+                .attr("r", newDataCount[i])
+                .style("fill", "red");
+          }
+        }
+      }
+      else {
+        for (var j = 0; j < newDataCount.length; j++){
+          if (latitude[j] != -500){
+            var l1 = Number(latitude[j]);
+            var ll1 = Number(longitude[j]);
+
+            //console.log(l + ", " + ll);
+
+            var loc1 = projection([l1, ll1]);
+            svg.append("circle")
+                .attr("cx", loc1[0])
+                .attr("cy", loc1[1])
+                .attr("r", newDataCount[j])
+                .style("fill", "red");
+          }
+        }
+      }
     }
-    // $scope.makeCalls("slavery");
-    // setTimeout(function () {
-    //   maxIndex = data.length;
-    //   console.log("The max Index is: " + maxIndex);
-    //
-    //   //TODO
-    //   //sort the array by the year
-    //
-    //   // $scope.elements = data;
-    //   // $scope.newElements = newData;
-    //   var newData = [];
-    //
-    //   for (var i = 0; i < maxIndex; i++){
-    //     var address = data[i].city + "," + data[i].state;
-    //     if (newData.length === 0 || newData.indexOf(address) < 0){
-    //       newData.push(address);
-    //       newDataCount.push(1);
-    //     }
-    //     else {
-    //       newDataCount[newData.indexOf(address)]++;
-    //     }
-    //   }
-    //   console.log(newDataCount.length);
-    //
-    //   $scope.getGeographicalAddress(newData);
-    //   // for (var k = 0; k < newData.length; k++){
-    //   //   //console.log(newData[k]);
-    //   //   $scope.getGeographicalAddress(newData[k]);
-    //   // }
-    //
-    //
-    // }, 5000);
-    //
-    // setTimeout(function () {
-    //     console.log(latitude.length);
-    //     console.log(longitude.length);
-    //     console.log("MUHAHAHAHAHAH");
-    //     // for (var i = 0; i < 50; i++) {
-    //     //   console.log(data[i].longitude);
-    //     //   console.log(data[i].latitude);
-    //     // }
-    //     //***************************************************************//
-    //     //D3 BEGIN
-    //     //***************************************************************//
-    //     var width = 960,
-    //         height = 500;
-    //
-    //     var projection = d3.geo.albersUsa()
-    //         .scale(1000)
-    //         .translate([width / 2, height / 2]);
-    //
-    //     var path = d3.geo.path()
-    //         .projection(projection);
-    //
-    //     var svg = d3.select("body").append("svg")
-    //         .attr("width", width)
-    //         .attr("height", height);
-    //     d3.json("https://gist.githubusercontent.com/mbostock/4090846/raw/us.json", function(error, us) {
-    //       if (error) throw error;
-    //
-    //       svg.insert("path", ".graticule")
-    //           .datum(topojson.feature(us, us.objects.land))
-    //           .attr("class", "land")
-    //           .attr("d", path);
-    //
-    //       svg.insert("path", ".graticule")
-    //           .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b && !(a.id / 1000 ^ b.id / 1000); }))
-    //           .attr("class", "county-boundary")
-    //           .attr("d", path);
-    //
-    //       svg.insert("path", ".graticule")
-    //           .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-    //           .attr("class", "state-boundary")
-    //           .attr("d", path);
-    //
-    //       //TODO
-    //       //find the max value of newDataCount
-    //
-    //       for (var i = 0; i < newDataCount.length; i++){
-    //         if (latitude[i] != -500){
-    //           var l = Number(latitude[i]);
-    //           var ll = Number(longitude[i]);
-    //
-    //           //console.log(l + ", " + ll);
-    //
-    //           var loc = projection([l, ll]);
-    //           svg.append("circle")
-    //               .attr("cx", loc[0])
-    //               .attr("cy", loc[1])
-    //               .attr("r", newDataCount[i]/8.0)
-    //               .style("fill", "red");
-    //         }
-    //       }
-    //
-    //       // var l = Number(latitude[0]);
-    //       // var ll = Number(longitude[0]);
-    //       //
-    //       // console.log(l + ", " + ll);
-    //       //
-    //       // var loc = projection([l, ll]);
-    //       // svg.append("circle")
-    //       //     .attr("cx", loc[0])
-    //       //     .attr("cy", loc[1])
-    //       //     .attr("r", newDataCount[0]/3.0)
-    //       //     .style("fill", "red");
-    //
-    //
-    //     });
-    //
-    //     d3.select(self.frameElement).style("height", height + "px");
-    //
-    //
-    //
-    //
-    //
-    //
-    //     //***************************************************************//
-    //     //D3 END
-    //     //***************************************************************//
-    // }, 7000);
-
-    // setTimeout(function(){
-    //   console.log(latitude.length);
-    //   console.log(longitude.length);
-    // }, 20000);
-
-
-
-
 
   });
