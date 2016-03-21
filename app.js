@@ -175,18 +175,47 @@ angular.module('todoApp', [])
     //   console.log($scope.msg);
     // });
 
-    $scope.getGeographicalAddress = function(str) {
-      $http.get('location.json')
+    $scope.getGeographicalAddress = function(newData) {
+      $http.get('test.json')
          .success(function(response) {
-            var tokens = str.split(",");
-            for (var i = 0; i < response.length; i++){
-              if (response[i].FIELD3 == tokens[1] && response[i].FIELD4 == tokens[0]){
-                longitude.push(response[i].FIELD7);
-                latitude.push(response[i].FIELD6);
-                //console.log(response[i]);
-                break;
+            for (var i = 0; i < newData.length; i++){
+              console.log("we are looking at: " + newData[i]);
+              var tokens = newData[i].split(","); //split city and state
+
+              var found = false;
+              for (var j = 0; j < response.length; j++){
+                if(response[j].FIELD1 == tokens[1] && response[j].FIELD2 == tokens[0]){
+                  console.log("we found a match!");
+                  var lat = response[j].FIELD3;
+                  var lng = response[j].FIELD4;
+
+                  console.log("our city is at: " + lat + ", " + lng);
+
+                  longitude.push(lat);
+                  latitude.push(lng);
+
+                  found = true;
+                  break;
+                }
+              }
+              if (!found){
+                console.log("NOT FOUND!!: " + tokens);
+                longitude.push(-500);
+                latitude.push(-500);
               }
             }
+
+
+
+            // for (var i = 0; i < response.length; i++){
+            //   if (response[i].FIELD1 == tokens[1] && response[i].FIELD2 == tokens[0]){
+            //     longitude.push(response[i].FIELD4);
+            //     latitude.push(response[i].FIELD3);
+            //     //console.log(response[i]);
+            //     break;
+            //   }
+            //
+            // }
          }).error(function(response) {
             console.log("Error at loading json");
          });
@@ -210,8 +239,7 @@ angular.module('todoApp', [])
       this.year = year;
     }
 
-    $scope.makeCalls("titanic");
-    $scope.getGeographicalAddress();
+    $scope.makeCalls("slavery");
     setTimeout(function () {
       maxIndex = data.length;
       console.log("The max Index is: " + maxIndex);
@@ -235,10 +263,11 @@ angular.module('todoApp', [])
       }
       console.log(newDataCount.length);
 
-      for (var k = 0; k < newData.length; k++){
-        //console.log(newData[k]);
-        $scope.getGeographicalAddress(newData[k]);
-      }
+      $scope.getGeographicalAddress(newData);
+      // for (var k = 0; k < newData.length; k++){
+      //   //console.log(newData[k]);
+      //   $scope.getGeographicalAddress(newData[k]);
+      // }
 
 
     }, 5000);
@@ -286,17 +315,37 @@ angular.module('todoApp', [])
               .attr("d", path);
 
           //TODO
-          //need to have a special case for DC
+          //find the max value of newDataCount
 
-          // for (var i = 0; i < newData.length;i++){
+          for (var i = 0; i < newDataCount.length; i++){
+            if (latitude[i] != -500){
+              var l = Number(latitude[i]);
+              var ll = Number(longitude[i]);
+
+              //console.log(l + ", " + ll);
+
+              var loc = projection([l, ll]);
+              svg.append("circle")
+                  .attr("cx", loc[0])
+                  .attr("cy", loc[1])
+                  .attr("r", newDataCount[i]/8.0)
+                  .style("fill", "red");
+            }
+          }
+
+          // var l = Number(latitude[0]);
+          // var ll = Number(longitude[0]);
           //
-          // }
-          var loc = projection([-77.0164, 38.9047]);
-          svg.append("circle")
-              .attr("cx", loc[0])
-              .attr("cy", loc[1])
-              .attr("r", 10)
-              .style("fill", "red");
+          // console.log(l + ", " + ll);
+          //
+          // var loc = projection([l, ll]);
+          // svg.append("circle")
+          //     .attr("cx", loc[0])
+          //     .attr("cy", loc[1])
+          //     .attr("r", newDataCount[0]/3.0)
+          //     .style("fill", "red");
+
+
         });
 
         d3.select(self.frameElement).style("height", height + "px");
@@ -309,34 +358,15 @@ angular.module('todoApp', [])
         //***************************************************************//
         //D3 END
         //***************************************************************//
-    }, 10000);
+    }, 7000);
 
-    setTimeout(function(){
-      console.log(latitude.length);
-      console.log(longitude.length);
-    }, 20000);
+    // setTimeout(function(){
+    //   console.log(latitude.length);
+    //   console.log(longitude.length);
+    // }, 20000);
 
 
 
 
 
   });
-
-  // .factory('mainFactory', function($http) {
-  //
-  //   var mainInfo = $http.get('location.json').success(function(response) {
-  //       console.log(response.data);
-  //       //return response.data;
-  //   });
-  //
-  //   // var factory = {}; // define factory object
-  //   //
-  //   // factory.getMainInfo = function() { // define method on factory object
-  //   //
-  //   //     return mainInfo; // returning data that was pulled in $http call
-  //   //
-  //   // };
-  //   //
-  //   // return factory; // returning factory to make it ready to be pulled by the controller
-  //
-  // });
