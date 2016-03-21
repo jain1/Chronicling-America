@@ -69,7 +69,7 @@ var states = [
         ['Wyoming', 'WY'],
     ];
 
-angular.module('todoApp', [])
+angular.module('todoApp', ['ngMaterial'])
 
   .controller('mainController', function($scope, $http) {
     //***************************************************************//
@@ -89,16 +89,16 @@ angular.module('todoApp', [])
             maxIndex = 0;
 
             pagesToSearch = Math.ceil(response.totalItems / resultsPerPages);
-            console.log("Our total number of items is: " + response.totalItems);
-            //console.log("Our total number of pages is: " + pagesToSearch);
-            console.log("all good to go");
-
-            console.log("We are searching through " + pagesToSearch + " pages!");
+            // console.log("Our total number of items is: " + response.totalItems);
+            // //console.log("Our total number of pages is: " + pagesToSearch);
+            // console.log("all good to go");
+            //
+            // console.log("We are searching through " + pagesToSearch + " pages!");
             for (var i = 1; i <= Math.min(50,pagesToSearch); i++){
               $scope.sendHTTPSCall(name, i);
             }
          }).error(function(response) {
-            console.log("damaging error!");
+            //console.log("damaging error!");
          });
     };
     //Helper Method
@@ -107,14 +107,13 @@ angular.module('todoApp', [])
          .success(function(response) {
             $scope.aggregate(response);
          }).error(function(response) {
-            console.log("Error at sendHTTPSCall()");
+            //console.log("Error at sendHTTPSCall()");
          });
     };
     //Helper Method
     $scope.aggregate = function(response){
       for (var i = 0; i < resultsPerPages; i++) {
         var object = response.items[i];
-        //console.log(object);
 
         //error handling
         if (object === undefined || object.city === undefined || object.state === undefined || object.date === undefined) continue;
@@ -134,11 +133,6 @@ angular.module('todoApp', [])
           var newObject = new paper(city, state, object.date.substring(0,4));
           data.push(newObject);
         }
-        //console.log(data.length);
-        //printing out individual elements
-        // for (var z = 0; z < data.length; z++){
-        //   console.log(data[z]);
-        // }
       }
     };
 
@@ -146,17 +140,17 @@ angular.module('todoApp', [])
       $http.get('test.json')
          .success(function(response) {
             for (var i = 0; i < newData.length; i++){
-              console.log("we are looking at: " + newData[i]);
+              //console.log("we are looking at: " + newData[i]);
               var tokens = newData[i].split(","); //split city and state
 
               var found = false;
               for (var j = 0; j < response.length; j++){
                 if(response[j].FIELD1 == tokens[1] && response[j].FIELD2 == tokens[0]){
-                  console.log("we found a match!");
+                  //console.log("we found a match!");
                   var lat = response[j].FIELD3;
                   var lng = response[j].FIELD4;
 
-                  console.log("our city is at: " + lat + ", " + lng);
+                  //console.log("our city is at: " + lat + ", " + lng);
 
                   longitude.push(lat);
                   latitude.push(lng);
@@ -166,13 +160,13 @@ angular.module('todoApp', [])
                 }
               }
               if (!found){
-                console.log("NOT FOUND!!: " + tokens);
+                //console.log("NOT FOUND!!: " + tokens);
                 longitude.push(-500);
                 latitude.push(-500);
               }
             }
          }).error(function(response) {
-            console.log("Error at loading json");
+            //console.log("Error at loading json");
          });
     };
 
@@ -187,23 +181,16 @@ angular.module('todoApp', [])
       this.state = state;
       this.year = year;
     }
-    $scope.init = function() {
-
+    $scope.updateYear = function(value) {
+      addData(value);
     };
 
     $scope.inputData = function(user){
-
       user = user.replace(" ", "+");
       $scope.makeCalls(user);
       setTimeout(function () {
         maxIndex = data.length;
-        console.log("The max Index is: " + maxIndex);
-
-        //TODO
-        //sort the array by the year
-
-        // $scope.elements = data;
-        // $scope.newElements = newData;
+        //console.log("The max Index is: " + maxIndex);
         var newData = [];
 
         for (var i = 0; i < maxIndex; i++){
@@ -216,28 +203,19 @@ angular.module('todoApp', [])
             newDataCount[newData.indexOf(address)]++;
           }
         }
-        console.log(newDataCount.length);
+        //console.log(newDataCount.length);
 
         $scope.getGeographicalAddress(newData);
-        // for (var k = 0; k < newData.length; k++){
-        //   //console.log(newData[k]);
-        //   $scope.getGeographicalAddress(newData[k]);
-        // }
 
 
       }, 5000);
       setTimeout(function(){
         loadD3();
-        //addData();
+        console.log($scope.showSlider);
+        $scope.showSlider = true;
+
       }, 7000);
       function loadD3() {
-          // console.log(latitude.length);
-          // console.log(longitude.length);
-          // console.log("MUHAHAHAHAHAH");
-          // for (var i = 0; i < 50; i++) {
-          //   console.log(data[i].longitude);
-          //   console.log(data[i].latitude);
-          // }
           //***************************************************************//
           //D3 BEGIN
           //***************************************************************//
@@ -272,26 +250,17 @@ angular.module('todoApp', [])
                 .attr("class", "state-boundary")
                 .attr("d", path);
 
-            //TODO
-            //find the max value of newDataCount
-            addData();
+            addData(1836);
 
 
           });
-          //d3.select(self.frameElement).style("height", height);
-          //addData();
+
 
           //***************************************************************//
           //D3 END
           //***************************************************************//
       }
 
-      // setTimeout(function() {
-      //   addData(1850);
-      //   //addData(1850);
-      //   console.log("completed 20 second delay");
-      //   console.log(20 < undefined);
-      // }, 20000);
     };
 
     function addData(year){
@@ -299,13 +268,9 @@ angular.module('todoApp', [])
       svg.selectAll("circle").remove();
       if (year !== undefined){
         for (var i = 0; i < newDataCount.length; i++){
-          if (latitude[i] != -500 && data[i].year < year){
+          if (latitude[i] != -500 && data[i].year == year){
             var l = Number(latitude[i]);
             var ll = Number(longitude[i]);
-
-            //console.log(l + ", " + ll);
-            //TODO
-            //find max of data before you are making the circles
             var loc = projection([l, ll]);
             svg.append("circle")
                 .attr("cx", loc[0])
@@ -320,9 +285,6 @@ angular.module('todoApp', [])
           if (latitude[j] != -500){
             var l1 = Number(latitude[j]);
             var ll1 = Number(longitude[j]);
-
-            //console.log(l + ", " + ll);
-
             var loc1 = projection([l1, ll1]);
             svg.append("circle")
                 .attr("cx", loc1[0])

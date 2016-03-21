@@ -24,6 +24,8 @@
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="pace.min.js"></script>
       <link href="loading.css" rel="stylesheet" />
+      <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+
 
 
 
@@ -33,8 +35,8 @@
   <body>
     <h2>Chronicling-America Visualization</h2>
     <div ng-controller="mainController as controller">
-      <i> If the project does not load, you can access it here: https://github.com/jain1/Chronicling-America</i><br/><br/>
-      <strong>Please reload page before new search.</strong><br/><br/>
+      <i> If the project does not load, you can access it here: https://github.com/jain1/Chronicling-America</i><br/>
+      <strong>Please reload page before new search.</strong><br/>
       {{clients}}
       <label>
        Search Phrase:
@@ -42,9 +44,26 @@
        <button ng-click="inputData(user)" ng-init="count=0">
         click
       </button>
+      <div ng-show="showSlider" layout="row">
+        <div layout="row">
+        <md-slider-container>
+          <md-slider style="width:600px" flex="" min="1836" max="1922" ng-model="color.black" aria-label="black" id="black-slider" ng-change="updateYear(color.black)">
+          </md-slider>
+        </md-slider-container>
+      </div>
+      <div layout="row">
+        <md-input-container>
+          <input style="width:80px" flex="" type="number" ng-model="color.black" aria-label="black" aria-controls="black-slider">
+        </md-input-container>
+      </div>
+    </div>
     </label>
     </div>
     <script src="angular.min.js"></script>
     <script src="app.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
   </body>
 </html>
