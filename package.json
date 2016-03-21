@@ -1,0 +1,19 @@
+{
+  "name": "cr",
+  "version": "1.0.0",
+  "description": "Resources: MIT's OpenSearchLight code: https://github.com/nsidc/OpenSearchlight Chronicling America API Documentation: http://chroniclingamerica.loc.gov/about/api/#search",
+  "main": "angular.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jain1/Chronicling-America.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jain1/Chronicling-America/issues"
+  },
+  "homepage": "https://github.com/jain1/Chronicling-America#readme"
+}
